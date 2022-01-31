@@ -34,13 +34,6 @@ resource "google_sql_user" "todoapp" {
   password = var.db_config.db_password
 }
 
-resource "google_storage_bucket_object" "todoapp_tables" {
-  count   = var.db_config.is_enabled ? 1 : 0
-  name    = "tables.sql"
-  content = data.http.db_migration_tables.body
-  bucket  = "asia-northeast1-devops-demo"
-}
-
-output "db_instance_name" {
-  value = var.db_config.is_enabled ? google_sql_database_instance.todoapp[0].name : "disabled"
+output "database_connection_name" {
+  value = join("", google_sql_database_instance.todoapp[*].connection_name)
 }

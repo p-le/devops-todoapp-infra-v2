@@ -13,9 +13,9 @@ variable "region" {
   description = "GCP Region"
 }
 
-variable "zone" {
-  type        = string
-  description = "GCP Zone"
+variable "argocd_config" {
+  type        = map(any)
+  description = "ArgoCD Config (Version, etc)"
 }
 
 variable "db_config" {
@@ -23,13 +23,3 @@ variable "db_config" {
   description = "DB Config"
 }
 
-variable "frontend_config" {
-  type        = map(any)
-  description = "Frontend Config"
-}
-
-
-variable "backend_config" {
-  type        = map(any)
-  description = "Backend Config"
-}

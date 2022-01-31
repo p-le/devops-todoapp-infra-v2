@@ -33,6 +33,6 @@ resource "google_compute_firewall" "default" {
     ports    = ["22"]
   }
 
-  target_tags   = ["devops-demo"]
+  target_tags   = [var.service_name]
   source_ranges = ["0.0.0.0/0"]
 }

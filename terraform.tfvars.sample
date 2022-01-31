@@ -1,0 +1,22 @@
+service_name = "todoapp"
+project_id   = "<gcp-project-id>"
+region       = "<target-gcp-region>"
+
+db_config = {
+  is_enabled  = "true"
+  db_version  = "MYSQL_8_0"
+  db_tier     = "db-f1-micro"
+  db_user     = "<db-user>"
+  db_password = "<db-password>"
+  db_name     = "todoapp"
+}
+
+argocd_config = {
+  public_ssh_key_secret_id     = "<argocd-public-key-secret-id>"
+  private_ssh_key_secret_id    = "<argocd-private-key-secret-id>"
+  target_version               = "<target-argocd-version>"
+  target_namespace             = "argocd"
+  target_repository_url        = "<target-repository-url>"
+  target_repository_name       = "<target-repository-name>"
+  target_application_namespace = "<target-application-namespace>"
+}

@@ -1,6 +1,4 @@
+# NOTE: Generate config.gcs.tfbackend to dynamically config remote backend in GCS
 terraform {
-  backend "gcs" {
-    bucket = "asia-northeast1-devops-demo"
-    prefix = "state"
-  }
+  backend "gcs" {}
 }
