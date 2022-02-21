@@ -15,7 +15,7 @@ resource "google_project_iam_member" "sql_client" {
 resource "google_service_account_iam_member" "workload_identity_user_backend" {
   service_account_id = google_service_account.node_pool.name
   role               = "roles/iam.workloadIdentityUser"
-  member             = "serviceAccount:${var.project_id}.svc.id.goog[default/backend-sa]"
+  member             = "serviceAccount:${var.project_id}.svc.id.goog[${var.argocd_config.target_application_namespace}/backend-sa]"
 }
 
 output "node_pool_sa_email" {
