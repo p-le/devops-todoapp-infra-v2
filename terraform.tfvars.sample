@@ -11,7 +11,23 @@ db_config = {
   db_name     = "todoapp"
 }
 
+repositories = {
+  backend = {
+    user_name = "p-le"
+    repo_name = "devops-todoapp-backend"
+  }
+  frontend = {
+    user_name = "p-le"
+    repo_name = "devops-todoapp-frontend"
+  }
+  manifest = {
+    user_name = "p-le"
+    repo_name = "devops-todoapp-manifests"
+  }
+}
+
 argocd_config = {
+  is_enabled                   = false
   public_ssh_key_secret_id     = "<argocd-public-key-secret-id>"
   private_ssh_key_secret_id    = "<argocd-private-key-secret-id>"
   target_version               = "<target-argocd-version>"

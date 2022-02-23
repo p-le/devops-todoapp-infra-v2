@@ -1,5 +1,6 @@
 # NOTE: Create argocd namespace and deploy ArgoCD to this namespace
 resource "kubernetes_namespace" "argocd" {
+  count = var.argocd_config.is_enabled ? 1 : 0
   depends_on = [
     google_container_node_pool.primary_nodes
   ]
@@ -12,6 +13,7 @@ resource "kubernetes_namespace" "argocd" {
 }
 
 resource "kubernetes_namespace" "application" {
+  count = var.argocd_config.is_enabled ? 1 : 0
   depends_on = [
     google_container_node_pool.primary_nodes
   ]
@@ -24,39 +26,40 @@ resource "kubernetes_namespace" "application" {
 }
 
 resource "kubectl_manifest" "argocd" {
-  count = length(data.kubectl_file_documents.argocd_manifests.documents)
+  count = var.argocd_config.is_enabled ? length(data.kubectl_file_documents.argocd_manifests.documents) : 0
   depends_on = [
     google_container_node_pool.primary_nodes,
-    kubernetes_namespace.argocd
+    kubernetes_namespace.argocd[0]
   ]
-  override_namespace = kubernetes_namespace.argocd.id
+  override_namespace = kubernetes_namespace.argocd[0].id
   yaml_body          = element(data.kubectl_file_documents.argocd_manifests.documents, count.index)
 }
 
 resource "kubectl_manifest" "application" {
+  count = var.argocd_config.is_enabled ? 1 : 0
   depends_on = [
     google_container_node_pool.primary_nodes,
-    kubernetes_namespace.argocd,
-    kubectl_manifest.argocd
+    kubernetes_namespace.argocd[0],
+    kubectl_manifest.argocd[0]
   ]
-  override_namespace = kubernetes_namespace.argocd.id
+  override_namespace = kubernetes_namespace.argocd[0].id
   yaml_body = templatefile("${path.module}/argocd/application.yaml", {
     APPLICATION_NAME      = var.service_name,
-    ARGOCD_NAMESPACE      = kubernetes_namespace.argocd.id
+    ARGOCD_NAMESPACE      = kubernetes_namespace.argocd[0].id
     REPO_URL              = var.argocd_config.target_repository_url
-    APPLICATION_NAMESPACE = kubernetes_namespace.application.id
+    APPLICATION_NAMESPACE = kubernetes_namespace.application[0].id
   })
 }
 
 resource "kubernetes_secret" "argocd_private_ssh_key" {
+  count = var.argocd_config.is_enabled ? 1 : 0
   metadata {
     name      = "${var.argocd_config.target_repository_name}-private-ssh-key"
-    namespace = kubernetes_namespace.argocd.id
+    namespace = kubernetes_namespace.argocd[0].id
     labels = {
       "argocd.argoproj.io/secret-type" = "repository"
     }
   }
-
   data = {
     type          = "git"
     url           = var.argocd_config.target_repository_url
@@ -65,6 +68,7 @@ resource "kubernetes_secret" "argocd_private_ssh_key" {
 }
 
 resource "github_repository_deploy_key" "argocd_deploy_key" {
+  count      = var.argocd_config.is_enabled ? 1 : 0
   title      = "Argocd Deploy Key"
   repository = var.argocd_config.target_repository_name
   key        = data.google_secret_manager_secret_version.argocd_ssh_public_key.secret_data
