@@ -1,17 +1,17 @@
-resource "random_id" "todoapp_db_name_suffix" {
+resource "random_id" "db_name_suffix" {
   count       = var.db_config.is_enabled ? 1 : 0
   byte_length = 4
 }
 
-resource "google_sql_database" "todoapp" {
+resource "google_sql_database" "application" {
   count    = var.db_config.is_enabled ? 1 : 0
   name     = var.db_config.db_name
-  instance = google_sql_database_instance.todoapp[count.index].name
+  instance = google_sql_database_instance.application[count.index].name
 }
 
-resource "google_sql_database_instance" "todoapp" {
+resource "google_sql_database_instance" "application" {
   count            = var.db_config.is_enabled ? 1 : 0
-  name             = "${var.service_name}-${random_id.todoapp_db_name_suffix[count.index].hex}"
+  name             = "${var.service_name}-${random_id.db_name_suffix[count.index].hex}"
   region           = var.region
   database_version = var.db_config.db_version
 
@@ -26,14 +26,14 @@ resource "google_sql_database_instance" "todoapp" {
   deletion_protection = "false"
 }
 
-resource "google_sql_user" "todoapp" {
+resource "google_sql_user" "application" {
   count    = var.db_config.is_enabled ? 1 : 0
   name     = var.db_config.db_user
-  instance = google_sql_database_instance.todoapp[count.index].name
+  instance = google_sql_database_instance.application[count.index].name
   host     = "%"
   password = var.db_config.db_password
 }
 
 output "database_connection_name" {
-  value = join("", google_sql_database_instance.todoapp[*].connection_name)
+  value = join("", google_sql_database_instance.application[*].connection_name)
 }

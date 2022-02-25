@@ -1,10 +1,10 @@
 module "gke_auth" {
   depends_on = [
-    google_container_cluster.todoapp
+    google_container_cluster.application
   ]
   source               = "terraform-google-modules/kubernetes-engine/google//modules/auth"
   project_id           = var.project_id
-  cluster_name         = google_container_cluster.todoapp.name
+  cluster_name         = google_container_cluster.application.name
   location             = local.target_deploy_zone
   use_private_endpoint = false
 }

@@ -2,11 +2,6 @@ data "google_compute_zones" "available" {
   region = var.region
 }
 
-# NOTE: Read SQL file content from backend repository
-data "http" "db_migration_tables" {
-  url = "https://raw.githubusercontent.com/p-le/test-todoapp-backend/master/migrations/tables.sql"
-}
-
 data "google_secret_manager_secret_version" "github_token" {
   secret = var.app_config.github_token_secret_id
 }

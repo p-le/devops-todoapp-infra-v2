@@ -1,4 +1,4 @@
-resource "google_container_cluster" "todoapp" {
+resource "google_container_cluster" "application" {
   name        = "${var.service_name}-cluster"
   description = "${var.service_name} GKE Cluster"
   location    = local.target_deploy_zone
@@ -18,7 +18,7 @@ resource "google_container_cluster" "todoapp" {
 resource "google_container_node_pool" "primary_nodes" {
   name               = "${var.service_name}-primary-nodepool"
   location           = local.target_deploy_zone
-  cluster            = google_container_cluster.todoapp.name
+  cluster            = google_container_cluster.application.name
   initial_node_count = 1
   max_pods_per_node  = 16
 
