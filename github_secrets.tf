@@ -36,12 +36,16 @@ resource "github_actions_secret" "frontend_pat" {
 }
 
 resource "github_actions_secret" "frontend_public_ip_adress" {
-  repository      = var.app_config.manifest.repo_name
+  repository      = var.app_config.frontend.repo_name
   secret_name     = "PUBLIC_IP_ADDRESS"
-  plaintext_value = google_compute_address.ingress_public_ip.address
+  plaintext_value = google_compute_global_address.ingress_public_ip.address
 }
 
-
+resource "github_actions_secret" "frontend_manifest_repository" {
+  repository      = var.app_config.frontend.repo_name
+  secret_name     = "MANIFEST_REPOSITORY"
+  plaintext_value = "${var.app_config.manifest.repo_user_name}/${var.app_config.manifest.repo_name}"
+}
 
 # Backend Repository
 resource "github_actions_secret" "backend_gcp_project" {
@@ -109,6 +113,13 @@ resource "github_actions_secret" "backend_db_name" {
 }
 
 
+resource "github_actions_secret" "backend_manifest_repository" {
+  repository      = var.app_config.backend.repo_name
+  secret_name     = "MANIFEST_REPOSITORY"
+  plaintext_value = "${var.app_config.manifest.repo_user_name}/${var.app_config.manifest.repo_name}"
+}
+
+
 
 
 # Manifest Files Repository
@@ -163,7 +174,7 @@ resource "github_actions_secret" "manifests_backend_sa" {
 resource "github_actions_secret" "manifests_public_ip_name" {
   repository      = var.app_config.manifest.repo_name
   secret_name     = "PUBLIC_IP_NAME"
-  plaintext_value = google_compute_address.ingress_public_ip.name
+  plaintext_value = google_compute_global_address.ingress_public_ip.name
 }
 
 
