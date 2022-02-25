@@ -36,3 +36,8 @@ resource "google_compute_firewall" "default" {
   target_tags   = [var.service_name]
   source_ranges = ["0.0.0.0/0"]
 }
+
+resource "google_compute_address" "ingress_public_ip" {
+  name         = "${var.service_name}-ingress-public-ipv4-address"
+  address_type = "EXTERNAL"
+}

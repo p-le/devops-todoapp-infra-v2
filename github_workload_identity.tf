@@ -38,3 +38,10 @@ resource "google_service_account_iam_member" "github_workload_identity_user_back
   role               = "roles/iam.workloadIdentityUser"
   member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github.name}/attribute.repository/${var.app_config.backend.repo_user_name}/${var.app_config.backend.repo_name}"
 }
+
+# NOTE: allow to get access token from Manifests Github Repository
+resource "google_service_account_iam_member" "github_workload_identity_user_manifest" {
+  service_account_id = google_service_account.github_workload_identity_federation.name
+  role               = "roles/iam.workloadIdentityUser"
+  member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github.name}/attribute.repository/${var.app_config.manifest.repo_user_name}/${var.app_config.manifest.repo_name}"
+}

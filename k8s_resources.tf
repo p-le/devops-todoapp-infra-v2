@@ -17,7 +17,8 @@ resource "kubernetes_secret" "db_credentials" {
     namespace = kubernetes_namespace.application.id
   }
   data = {
-    password = data.google_secret_manager_secret_version.db_password.secret_data
-    user     = var.db_config.db_user
+    password        = data.google_secret_manager_secret_version.db_password.secret_data
+    user            = var.db_config.db_user
+    connection_name = join("", google_sql_database_instance.application[*].connection_name)
   }
 }
