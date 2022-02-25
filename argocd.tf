@@ -12,18 +12,6 @@ resource "kubernetes_namespace" "argocd" {
   }
 }
 
-resource "kubernetes_namespace" "application" {
-  depends_on = [
-    google_container_node_pool.primary_nodes
-  ]
-  metadata {
-    labels = {
-      role = var.app_config.target_namespace
-    }
-    name = var.app_config.target_namespace
-  }
-}
-
 resource "kubectl_manifest" "argocd" {
   count = var.argocd_config.is_enabled ? length(data.kubectl_file_documents.argocd_manifests[0].documents) : 0
   depends_on = [
