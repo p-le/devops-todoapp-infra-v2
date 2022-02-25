@@ -31,7 +31,7 @@ resource "google_sql_user" "application" {
   name     = var.db_config.db_user
   instance = google_sql_database_instance.application[count.index].name
   host     = "%"
-  password = var.db_config.db_password
+  password = data.google_secret_manager_secret_version.db_password.secret_data
 }
 
 output "database_connection_name" {

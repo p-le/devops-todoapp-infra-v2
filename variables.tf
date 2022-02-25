@@ -13,6 +13,11 @@ variable "region" {
   description = "GCP Region"
 }
 
+variable "secrets_ids" {
+  type        = map(any)
+  description = "Required: Secret Manager Secret IDs"
+}
+
 variable "db_config" {
   type        = map(any)
   description = "DB Config"
@@ -20,11 +25,10 @@ variable "db_config" {
 
 variable "app_config" {
   type = object({
-    github_token_secret_id = string
-    target_namespace       = string
-    backend                = map(any)
-    frontend               = map(any)
-    manifest               = map(any)
+    target_namespace = string
+    backend          = map(any)
+    frontend         = map(any)
+    manifest         = map(any)
   })
   description = "Application Config"
 }

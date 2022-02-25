@@ -3,24 +3,34 @@ data "google_compute_zones" "available" {
 }
 
 data "google_secret_manager_secret_version" "github_token" {
-  secret = var.app_config.github_token_secret_id
+  secret = var.secrets_ids.github_token
 }
 
-# NOTE: Read ArgoCD Install YAML Online
+data "google_secret_manager_secret_version" "db_password" {
+  secret = var.secrets_ids.db_password
+}
+
+#### ArgoCD
+# Read ArgoCD Install Manifest YAML remotely
+# Read registered Secret Manager Value
 data "http" "argocd_install" {
-  url = "https://raw.githubusercontent.com/argoproj/argo-cd/${var.argocd_config.target_version}/manifests/install.yaml"
+  count = var.argocd_config.is_enabled ? 1 : 0
+  url   = "https://raw.githubusercontent.com/argoproj/argo-cd/${var.argocd_config.target_version}/manifests/install.yaml"
 }
 
-data "google_secret_manager_secret_version" "argocd_ssh_public_key" {
-  secret = var.argocd_config.public_ssh_key_secret_id
+data "google_secret_manager_secret_version" "argocd_public_key" {
+  count  = var.argocd_config.is_enabled ? 1 : 0
+  secret = var.secrets_ids.argocd_public_key
 }
 
-data "google_secret_manager_secret_version" "argocd_ssh_private_key" {
-  secret = var.argocd_config.private_ssh_key_secret_id
+data "google_secret_manager_secret_version" "argocd_private_key" {
+  count  = var.argocd_config.is_enabled ? 1 : 0
+  secret = var.secrets_ids.argocd_private_key
 }
 
 data "kubectl_file_documents" "argocd_manifests" {
-  content = data.http.argocd_install.body
+  count   = var.argocd_config.is_enabled ? 1 : 0
+  content = data.http.argocd_install[0].body
 }
 
 # NOTE: specifiy target zone to create Zonal GKE Cluster

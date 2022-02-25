@@ -25,13 +25,13 @@ resource "kubernetes_namespace" "application" {
 }
 
 resource "kubectl_manifest" "argocd" {
-  count = var.argocd_config.is_enabled ? length(data.kubectl_file_documents.argocd_manifests.documents) : 0
+  count = var.argocd_config.is_enabled ? length(data.kubectl_file_documents.argocd_manifests[0].documents) : 0
   depends_on = [
     google_container_node_pool.primary_nodes,
     kubernetes_namespace.argocd[0]
   ]
   override_namespace = kubernetes_namespace.argocd[0].id
-  yaml_body          = element(data.kubectl_file_documents.argocd_manifests.documents, count.index)
+  yaml_body          = element(data.kubectl_file_documents.argocd_manifests[0].documents, count.index)
 }
 
 resource "kubectl_manifest" "application" {
@@ -62,7 +62,7 @@ resource "kubernetes_secret" "argocd_private_ssh_key" {
   data = {
     type          = "git"
     url           = var.argocd_config.target_repository_url
-    sshPrivateKey = data.google_secret_manager_secret_version.argocd_ssh_private_key.secret_data
+    sshPrivateKey = data.google_secret_manager_secret_version.argocd_private_key[0].secret_data
   }
 }
 
@@ -70,6 +70,6 @@ resource "github_repository_deploy_key" "argocd_deploy_key" {
   count      = var.argocd_config.is_enabled ? 1 : 0
   title      = "Argocd Deploy Key"
   repository = var.argocd_config.target_repository_name
-  key        = data.google_secret_manager_secret_version.argocd_ssh_public_key.secret_data
+  key        = data.google_secret_manager_secret_version.argocd_public_key[0].secret_data
   read_only  = true
 }
