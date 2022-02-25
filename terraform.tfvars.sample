@@ -2,8 +2,6 @@ service_name = "todoapp"
 project_id   = "<gcp-project-id>"
 region       = "<target-gcp-region>"
 
-github_token_secret_id = "github-token"
-
 db_config = {
   is_enabled  = "true"
   db_version  = "MYSQL_8_0"
@@ -18,16 +16,16 @@ app_config = {
   target_namespace       = "application"
 
   backend = {
-    repo_user_name      = "p-le"
+    repo_user_name      = "<github-user>"
     repo_name           = "devops-todoapp-backend"
     gke_service_account = "backend-sa"
   }
   frontend = {
-    repo_user_name = "p-le"
+    repo_user_name = "<github-user>"
     repo_name      = "devops-todoapp-frontend"
   }
   manifest = {
-    repo_user_name = "p-le"
+    repo_user_name = "<github-user>"
     repo_name      = "devops-todoapp-manifests"
   }
 }
