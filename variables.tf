@@ -18,9 +18,15 @@ variable "db_config" {
   description = "DB Config"
 }
 
-variable "repositories" {
-  type        = map(any)
-  description = "GitHub Repositories"
+variable "app_config" {
+  type = object({
+    github_token_secret_id = string
+    target_namespace       = string
+    backend                = map(any)
+    frontend               = map(any)
+    manifest               = map(any)
+  })
+  description = "Application Config"
 }
 
 variable "argocd_config" {

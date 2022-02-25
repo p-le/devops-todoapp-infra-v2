@@ -13,15 +13,14 @@ resource "kubernetes_namespace" "argocd" {
 }
 
 resource "kubernetes_namespace" "application" {
-  count = var.argocd_config.is_enabled ? 1 : 0
   depends_on = [
     google_container_node_pool.primary_nodes
   ]
   metadata {
     labels = {
-      role = var.argocd_config.target_application_namespace
+      role = var.app_config.target_namespace
     }
-    name = var.argocd_config.target_application_namespace
+    name = var.app_config.target_namespace
   }
 }
 
@@ -47,7 +46,7 @@ resource "kubectl_manifest" "application" {
     APPLICATION_NAME      = var.service_name,
     ARGOCD_NAMESPACE      = kubernetes_namespace.argocd[0].id
     REPO_URL              = var.argocd_config.target_repository_url
-    APPLICATION_NAMESPACE = kubernetes_namespace.application[0].id
+    APPLICATION_NAMESPACE = kubernetes_namespace.application.id
   })
 }
 

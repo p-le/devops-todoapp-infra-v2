@@ -2,6 +2,8 @@ service_name = "todoapp"
 project_id   = "<gcp-project-id>"
 region       = "<target-gcp-region>"
 
+github_token_secret_id = "github-token"
+
 db_config = {
   is_enabled  = "true"
   db_version  = "MYSQL_8_0"
@@ -11,20 +13,25 @@ db_config = {
   db_name     = "todoapp"
 }
 
-repositories = {
+app_config = {
+  github_token_secret_id = "github-token"
+  target_namespace       = "application"
+
   backend = {
-    user_name = "p-le"
-    repo_name = "devops-todoapp-backend"
+    repo_user_name      = "p-le"
+    repo_name           = "devops-todoapp-backend"
+    gke_service_account = "backend-sa"
   }
   frontend = {
-    user_name = "p-le"
-    repo_name = "devops-todoapp-frontend"
+    repo_user_name = "p-le"
+    repo_name      = "devops-todoapp-frontend"
   }
   manifest = {
-    user_name = "p-le"
-    repo_name = "devops-todoapp-manifests"
+    repo_user_name = "p-le"
+    repo_name      = "devops-todoapp-manifests"
   }
 }
+
 
 argocd_config = {
   is_enabled                   = false
@@ -32,7 +39,4 @@ argocd_config = {
   private_ssh_key_secret_id    = "<argocd-private-key-secret-id>"
   target_version               = "<target-argocd-version>"
   target_namespace             = "argocd"
-  target_repository_url        = "<target-repository-url>"
-  target_repository_name       = "<target-repository-name>"
-  target_application_namespace = "<target-application-namespace>"
 }

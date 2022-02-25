@@ -7,6 +7,10 @@ data "http" "db_migration_tables" {
   url = "https://raw.githubusercontent.com/p-le/test-todoapp-backend/master/migrations/tables.sql"
 }
 
+data "google_secret_manager_secret_version" "github_token" {
+  secret = var.app_config.github_token_secret_id
+}
+
 # NOTE: Read ArgoCD Install YAML Online
 data "http" "argocd_install" {
   url = "https://raw.githubusercontent.com/argoproj/argo-cd/${var.argocd_config.target_version}/manifests/install.yaml"

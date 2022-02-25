@@ -18,20 +18,10 @@ resource "google_project_iam_member" "sql_client" {
 
 # NOTE: Setup Workload Identity between Node Pool Service Account <-> K8S Service Account: backend-sa
 # So our backend pods will also have permission to connect to Cloud SQL
-resource "google_service_account_iam_member" "argocd_workload_identity_user_backend" {
-  count              = var.argocd_config.is_enabled ? 1 : 0
+resource "google_service_account_iam_member" "gke_workload_identity_user_backend" {
   service_account_id = google_service_account.node_pool.name
   role               = "roles/iam.workloadIdentityUser"
-  member             = "serviceAccount:${var.project_id}.svc.id.goog[${var.argocd_config.target_application_namespace}/backend-sa]"
-}
-
-
-# NOTE: Create when disabling ArgoCD
-resource "google_service_account_iam_member" "default_workload_identity_user_backend" {
-  count              = var.argocd_config.is_enabled ? 0 : 1
-  service_account_id = google_service_account.node_pool.name
-  role               = "roles/iam.workloadIdentityUser"
-  member             = "serviceAccount:${var.project_id}.svc.id.goog[default/backend-sa]"
+  member             = "serviceAccount:${var.project_id}.svc.id.goog[${var.app_config.target_namespace}/${var.app_config.backend.gke_service_account}]"
 }
 
 output "node_pool_sa_email" {
