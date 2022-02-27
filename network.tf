@@ -9,6 +9,7 @@ resource "google_compute_subnetwork" "subnet" {
   network       = google_compute_network.vpc.name
   ip_cidr_range = "10.2.0.0/16"
 
+  # NOTE: required for VPC-Native GKE Cluster
   secondary_ip_range {
     range_name    = "services-range"
     ip_cidr_range = "192.168.1.0/24"
@@ -28,15 +29,11 @@ resource "google_compute_firewall" "default" {
     protocol = "icmp"
   }
 
-  allow {
-    protocol = "tcp"
-    ports    = ["22"]
-  }
-
   target_tags   = [var.service_name]
   source_ranges = ["0.0.0.0/0"]
 }
 
+# NOTE: Static External IP Address for K8S Ingress
 resource "google_compute_global_address" "ingress_public_ip" {
   name         = "${var.service_name}-ingress-public-ipv4-address"
   address_type = "EXTERNAL"
