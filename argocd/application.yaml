@@ -6,9 +6,11 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: ${REPO_URL}
+    repoURL: ${HELM_REPO_URL}
     targetRevision: HEAD
-    path: .
+    chart: todoapp
+    helm:
+      releaseName: todoapp
   destination:
     server: https://kubernetes.default.svc
     namespace: ${APPLICATION_NAMESPACE}
