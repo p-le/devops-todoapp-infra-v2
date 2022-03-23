@@ -29,6 +29,7 @@ variable "app_config" {
     backend          = map(any)
     frontend         = map(any)
     manifest         = map(any)
+    helm_chart       = map(any)
   })
   description = "Application Config"
 }

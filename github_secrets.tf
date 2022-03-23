@@ -72,7 +72,7 @@ resource "github_actions_secret" "backend_workload_identity_provider" {
   plaintext_value = google_iam_workload_identity_pool_provider.github.name
 }
 
-resource "github_actions_secret" "backend_workload_identity__service_account" {
+resource "github_actions_secret" "backend_workload_identity_service_account" {
   repository      = var.app_config.backend.repo_name
   secret_name     = "GCP_WORKLOAD_IDENTITY_SERVICE_ACCOUNT"
   plaintext_value = google_service_account.github_workload_identity_federation.email
