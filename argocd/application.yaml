@@ -1,3 +1,4 @@
+
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -7,10 +8,27 @@ spec:
   project: default
   source:
     repoURL: ${HELM_REPO_URL}
-    targetRevision: HEAD
+    targetRevision: 1.0.4
     chart: todoapp
     helm:
       releaseName: todoapp
+      parameters:
+        - name: gcpIngressExternalIP.name
+          value: ${INGRESS_EXTERNAL_IP_RESOURCE_NAME}
+        - name: gcpIngressExternalIP.ipAddress
+          value: ${INGRESS_EXTERNAL_IP_ADDRESS}
+        - name: backendServiceAccount
+          value: ${BACKEND_SERVICE_ACCOUNT}
+        - name: workloadIdentityServiceAccountEmail
+          value: ${GKE_WORKLOAD_IDENTITY_SERVICE_ACCOUNT_EMAIL}
+        - name: frontendImage.registry
+          value: ${IMAGE_REGISTRY}
+        - name: frontendImage.tag
+          value: v1.0.6
+        - name: backendImage.registry
+          value: ${IMAGE_REGISTRY}
+        - name: backendImage.tag
+          value: v1.0.10
   destination:
     server: https://kubernetes.default.svc
     namespace: ${APPLICATION_NAMESPACE}

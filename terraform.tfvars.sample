@@ -36,8 +36,9 @@ app_config = {
     repo_name      = "devops-todoapp-manifests"
   }
   helm_chart = {
+    gh_page_url    = "<github-page-url>"
     repo_user_name = "<github-user>"
-    repo_name      = "devops-todoapp-helm-chart"
+    repo_name      = "devops-helm-charts"
   }
 }
 

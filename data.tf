@@ -36,6 +36,6 @@ data "kubectl_file_documents" "argocd_manifests" {
 # NOTE: specifiy target zone to create Zonal GKE Cluster
 locals {
   target_deploy_zone = data.google_compute_zones.available.names[0]
-  helm_chart_repo_url = "git@github.com:${var.app_config.helm_chart.repo_user_name}/${var.app_config.helm_chart.repo_name}"
+  image_registry     = "${google_artifact_registry_repository.application.location}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.application.repository_id}"
 }
 
